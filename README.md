@@ -1,2 +1,2 @@
-# test_lib
+# Testing Framework
 Testing repository for C projects
