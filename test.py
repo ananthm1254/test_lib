@@ -1,33 +1,38 @@
 import ctypes
+from libs.structures import Voter, Party, Issues
 
-class Issues(ctypes.Structure):
+class PartyList(ctypes.Structure):
     _fields_ = [
-        ("social", ctypes.c_uint),
-        ("economic", ctypes.c_uint)
+        ("num", ctypes.c_uint32),
+        ("voter", Voter),
+        ("partylist", (2*Party))
     ]
 
-    # def __init__(self, socialIssues=None, economicIssues=None):
-    #     if not socialIssues:
-    #         self.socialIssues = socialIssues
-    #     if not economicIssues:
-    #         self.economicIssues = economicIssues
+    def __init__(self, num, voter, partylist):
+        self.num = num
+        self.voter = voter
 
-    #     super(Issues, self).__init__(socialIssues, economicIssues)
-
-class Voter(ctypes.Structure):
-    _fields_ = [
-        ("tag", ctypes.c_longlong),
-        ("age", ctypes.c_uint),
-        ("issues", Issues)
-    ]
+        for i in range(0, num):
+            self.partylist[i] = partylist[i]
+        super(PartyList, self).__init__(num, voter, partylist)
 
 lib = ctypes.CDLL("../build/sim_test.so")
 
-issues = Issues()
+print(ctypes.sizeof(Issues), ctypes.sizeof(Voter), ctypes.sizeof(Party), ctypes.sizeof(PartyList))
+issues = Issues(1,3)
+voter = Voter(1, 25, issues)
 
-lib.IssuesInit.argtypes = [ctypes.c_uint, ctypes.c_uint]
-lib.IssuesInit.restype = (Issues)
+partylist = (2*Party)()
+partylist[0] = Party(1, Issues(1,2))
+partylist[1] = Party(2, Issues(4,3))
 
-issues = lib.IssuesInit(1,2)
+partylist_type = PartyList(2, voter, partylist)
+partylist_type.partylist[0].print_struct()
+partylist_type.partylist[1].print_struct()
 
-assert((issues.social == 1) and (issues.economic == 2))
+lib.FeCmdHandler.argtypes = [ctypes.c_uint32, ctypes.POINTER(PartyList), ctypes.POINTER(Party)]
+
+party = Party(0, Issues(0,0))
+
+lib.FeCmdHandler(ctypes.c_uint(2), ctypes.byref(partylist_type), ctypes.byref(party))
+party.print_struct()
