@@ -47,6 +47,5 @@ def send_payload(lib, cmd=FE_TASK_INIT_BE, input_dict=None, verbose=False):
         input_payload = initialize_be_init_payload(input_dict)
         output_payload = Voter()
     lib.FeCmdHandler(cmd, byref(input_payload), byref(output_payload))
-    print(output_payload)
     return output_payload
     

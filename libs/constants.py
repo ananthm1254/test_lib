@@ -1,5 +1,5 @@
 
-SHARED_OBJECT_FILE = "./build/sim_test.so"
+SHARED_OBJECT_FILE = "./build/sim_test/sim_test.so"
 
 FE_TASK_FE_INIT = 0x0
 FE_TASK_INIT_BE = 0x1
