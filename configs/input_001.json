@@ -1,0 +1,27 @@
+{
+    "numberOfParties" : 2,
+    "voter": {
+        "tag" : 1,
+        "age" : 25,
+        "issues":{
+            "social":1,
+            "economic":2
+        }
+    },
+    "partylist": {
+        "party1": {
+            "tag":1,
+            "issues":{
+                "social":1,
+                "economic":2
+            }                            
+        },
+        "party2": {
+            "tag":2,
+            "issues":{
+                "social":2,
+                "economic":0
+            }                            
+        }                       
+    }
+}
