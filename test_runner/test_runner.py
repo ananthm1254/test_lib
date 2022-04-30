@@ -10,6 +10,7 @@ class TestRunner:
 
     def __init__(self):
         self.library = None
+        self.logger = None
     
     def get_caller_info(self):
         caller_frame = inspect.stack()[2]
@@ -33,17 +34,18 @@ class TestRunner:
 
     def log(self, msg, type="INFO"):
         _, filename_only = self.get_caller_info()
-        logger = self.configure_logging(name=filename_only)
+        if self.logger is None:
+            self.logger = self.configure_logging(name=filename_only)
         if type == "INFO":
-            logger.info(msg)
+            self.logger.info(msg)
         elif type == "DEBUG":
-            logger.debug(msg)
+            self.logger.debug(msg)
         elif type == "WARNING":
-            logger.warning(msg)
+            self.logger.warning(msg)
         elif type == "ERROR":
-            logger.error(msg)
+            self.logger.error(msg)
         else:
-            logger.error("Wrong logging type")
+            self.logger.error("Wrong logging type")
 
     def load_library_module(self):
         self.library = utils.initiliaze_shared_library()
