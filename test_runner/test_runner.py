@@ -1,5 +1,6 @@
 import logging
 from libs import utils
+from test_runner.test_exception import TestException
 import os
 import inspect
 
@@ -57,7 +58,20 @@ class TestRunner:
     def test(self):
         pass
 
+    def test_failed_method(self, err):
+        self.log("TEST FAILED")
+        raise err
+
+    def test_passed_method(self):
+        self.log("TEST PASSED")
+
     def run_test(self):
         self.log("Initiliazing Test Runner")
         self.initialiaze()
-        self.test()
+        try:
+            self.test()
+        except TestException as err:
+            self.test_failed_method(err)
+        else:
+            self.test_passed_method()
+        
