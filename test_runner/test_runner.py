@@ -4,6 +4,7 @@ from test_runner.test_exception import TestException
 import os
 import inspect
 
+
 class TestRunner:
     """
     Test runner class for generic testing purposes
@@ -12,13 +13,13 @@ class TestRunner:
     def __init__(self):
         self.library = None
         self.logger = None
-    
+
     def get_caller_info(self):
         caller_frame = inspect.stack()[2]
         caller_filename_full = caller_frame.filename
         caller_filename_only = os.path.splitext(os.path.basename(caller_filename_full))[0]
         return caller_filename_full, caller_filename_only
-    
+
     def configure_logging(self, name=None):
         if name is not None:
             logger = logging.getLogger(name)
@@ -51,7 +52,7 @@ class TestRunner:
     def load_library_module(self):
         self.library = utils.initiliaze_shared_library()
 
-    def initialiaze(self):
+    def initialize(self):
         self.log("Load library into the test framework")
         self.load_library_module()
 
@@ -66,12 +67,15 @@ class TestRunner:
         self.log("TEST PASSED")
 
     def run_test(self):
-        self.log("Initiliazing Test Runner")
-        self.initialiaze()
+        self.log("Initializing Test Runner")
+        try:
+            self.initialize()
+        except Exception as err:
+            self.test_failed_method(err)
+
         try:
             self.test()
         except TestException as err:
             self.test_failed_method(err)
         else:
             self.test_passed_method()
-        

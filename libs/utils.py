@@ -1,16 +1,18 @@
 import ctypes
 import random
-from libs.constants import *
+from libs.constants import SHARED_OBJECT_FILE
 import os
 from libs import structures
 
+
 def initiliaze_shared_library():
-    '''
+    """
     Initializes the shared library module from the project
-    '''
+    """
     path = os.path.dirname(os.path.realpath(__file__)) + "/../../"
     lib = ctypes.CDLL(path + SHARED_OBJECT_FILE)
     return lib
+
 
 def erase_direct(lib, args):
     if args is None:
@@ -22,6 +24,7 @@ def erase_direct(lib, args):
         erase_msg.Address.AddressSpecific.Offset = 0
         erase_msg.RespQid = args["resp_qid"]
         return lib.FileErase(ctypes.byref(erase_msg))
+
 
 def write_direct(lib, args):
     if args is None:
@@ -35,6 +38,7 @@ def write_direct(lib, args):
         write_msg.BuffPtr = args["buff_ptr"]
         return lib.FileWrite(ctypes.byref(write_msg))
 
+
 def read_direct(lib, args):
     if args is None:
         raise Exception("Nonetype args are not allowed")
@@ -47,21 +51,22 @@ def read_direct(lib, args):
         read_msg.BuffPtr = args["buff_ptr"]
         return lib.FileRead(ctypes.byref(read_msg)), read_msg.BuffPtr
 
+
 def generate_write_buffer(length, seed=None):
     if seed is not None:
         random.seed(seed)
-    temp = [random.randint(0, 255) for i in range(0,length)]
+    temp = [random.randint(0, 255) for i in range(0, length)]
     buffer = (ctypes.c_uint8 * len(temp))(*temp)
     ctypes.cast(buffer, ctypes.POINTER(ctypes.c_uint8))
     return buffer
-    
+
 
 def generate_read_buffer(length):
-    temp = [0 for i in range(0,length)]
+    temp = [0 for i in range(0, length)]
     buffer = (ctypes.c_uint8 * len(temp))(*temp)
     ctypes.cast(buffer, ctypes.POINTER(ctypes.c_uint8))
     return buffer
+
 
 def send_payload(lib, cmd=None, input_dict=None, verbose=False):
     pass
-    

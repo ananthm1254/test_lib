@@ -1,5 +1,6 @@
 import ctypes
 
+
 class AddressSpecific(ctypes.Structure):
     _fields_ = [
         ("BlockAddress", ctypes.c_uint8),
@@ -14,11 +15,14 @@ class Address(ctypes.Union):
         ("Address", ctypes.c_uint32),
         ("AddressSpecific", AddressSpecific)
     ]
+
+
 class EraseMsg(ctypes.Structure):
     _fields_ = [
         ("Address", Address),
         ("RespQId", ctypes.c_uint32)
     ]
+
 
 class WriteMsg(ctypes.Structure):
     _fields_ = [
@@ -27,12 +31,14 @@ class WriteMsg(ctypes.Structure):
         ("RespQId", ctypes.c_uint32)
     ]
 
+
 class ReadMsg(ctypes.Structure):
     _fields_ = [
         ("Address", Address),
-        ("BuffPtr", ctypes.POINTER(ctypes.c_uint8)),   
+        ("BuffPtr", ctypes.POINTER(ctypes.c_uint8)),
         ("RespQId", ctypes.c_uint32)
     ]
+
 
 class CmdMsg(ctypes.Union):
     __fields_ = [
