@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
-
+                echo "Finished"
             }
         }
         stage('Clone and generate File system') {
