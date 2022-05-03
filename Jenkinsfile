@@ -2,13 +2,9 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout SCM') {
-            steps {
-                echo "Finished"
-            }
-        }
         stage('Clone and generate File system') {
             steps {
+                sh "rm -rf file_system"
                 sh "git clone https://github.com/ananthm1254/file_system.git"
                 sh "cd file_system"
                 sh "git pull"
