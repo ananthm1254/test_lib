@@ -17,9 +17,9 @@ pipeline {
         }
         stage('Test') {
             steps {
+                sh "sudo python3 setup.py build"
                 sh "sudo python3 setup.py install"
                 sh "pip install -r requirements_dev.txt"
-                sh "python3 setup build"
                 sh "flake8 libs test_runner test_scripts -v"
             }
         }
