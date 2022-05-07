@@ -31,7 +31,7 @@ class TemplateTest(TestRunner):
 
         self.log("Step 3. Sequentially read from file for 16 chunks")
         for offset in range(0, 16):
-            self.log("Step 3.{}. Reading offset {}".format(offset, offset))
+            self.log(f"Step 3.{offset}. Reading offset {offset}")
             read_buffer = utils.generate_read_buffer(length=1024)
             args = {
                 "block_address": 0,
