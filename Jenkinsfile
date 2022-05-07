@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Build Library') {
             steps {
-                sh "cd file_system && make build"
+                sh "cd file_system && make build 2>&1 | tee logs/file_system_build.log"
             }
         }
         stage('Test') {
@@ -20,8 +20,13 @@ pipeline {
                 sh "sudo python3 setup.py build"
                 sh "sudo python3 setup.py install"
                 sh "pip install -r requirements_dev.txt"
-                sh "python3 -m flake8 libs test_runner test_scripts -v"
+                sh "python3 -m flake8 libs test_runner test_scripts -v 2>&1 | tee logs/flake8.log"
             }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'logs/*', onlyIfSuccessful: true
         }
     }
 }
