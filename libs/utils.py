@@ -5,12 +5,16 @@ import os
 from libs import structures
 
 
-def initiliaze_shared_library():
+def initiliaze_shared_library(lib_file=None):
     """
     Initializes the shared library module from the project
     """
-    path = os.path.dirname(os.path.realpath(__file__)) + "/../../"
-    lib = ctypes.CDLL(path + SHARED_OBJECT_FILE)
+    if lib_file:
+        path = lib_file
+        lib = ctypes.CDLL(lib_file)
+    else:
+        path = os.path.dirname(os.path.realpath(__file__)) + "/../../"
+        lib = ctypes.CDLL(path + SHARED_OBJECT_FILE)
     return lib
 
 

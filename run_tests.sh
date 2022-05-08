@@ -4,4 +4,4 @@ export PYTHONPATH=.
 
 echo using Python3
 
-python3 $1
+python3 $@

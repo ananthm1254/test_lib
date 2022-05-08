@@ -1,8 +1,10 @@
 import logging
+import time
 from libs import utils
 from test_runner.test_exception import TestException
 import os
 import inspect
+import argparse
 
 
 class TestRunner:
@@ -13,6 +15,20 @@ class TestRunner:
     def __init__(self):
         self.library = None
         self.logger = None
+        self.start = None
+        self.stop = None
+        self.parser = None
+        self.args = None
+
+    def add_arguments(self):
+        self.parser = argparse.ArgumentParser()
+        self.parser.add_argument(
+            "--build_library",
+            default=None,
+            type=str,
+            help="Build Library"
+        )
+        self.args = self.parser.parse_args()
 
     def get_caller_info(self):
         caller_frame = inspect.stack()[2]
@@ -28,7 +44,7 @@ class TestRunner:
 
         logger.setLevel(logging.DEBUG)
         ch = logging.StreamHandler()
-        formatter = logging.Formatter('%(asctime)s - %(name)s - [%(levelname)s] - %(message)s')
+        formatter = logging.Formatter('%(asctime)s - [%(levelname)s] - %(message)s')
         ch.setFormatter(formatter)
         logger.addHandler(ch)
 
@@ -50,9 +66,11 @@ class TestRunner:
             self.logger.error("Wrong logging type")
 
     def load_library_module(self):
-        self.library = utils.initiliaze_shared_library()
+        self.log(f"Load custom deveoped library {self.args.build_library}")
+        self.library = utils.initiliaze_shared_library(lib_file=self.args.build_library)
 
     def initialize(self):
+        self.add_arguments()
         self.log("Load library into the test framework")
         self.load_library_module()
 
@@ -60,13 +78,18 @@ class TestRunner:
         pass
 
     def test_failed_method(self, err):
+        self.stop = time.perf_counter()
         self.log("TEST FAILED")
+        self.log(f"Run time : {round(self.stop - self.start, 4)}")
         raise err
 
     def test_passed_method(self):
+        self.stop = time.perf_counter()
         self.log("TEST PASSED")
+        self.log(f"Run time : {round(self.stop - self.start, 4)}")
 
     def run_test(self):
+        self.start = time.perf_counter()
         self.log("Initializing Test Runner")
         try:
             self.initialize()
