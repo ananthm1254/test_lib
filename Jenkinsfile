@@ -6,7 +6,7 @@ pipeline {
             steps {
                 sh "rm -rf file_system"
                 sh "git clone https://github.com/ananthm1254/file_system.git"
-                sh "cd file_system && git checkout feature/file-system-improvement"
+                sh "cd file_system"
                 sh "cd file_system && python3 file_generator.py --page_count=16"
                 sh "mkdir -p logs"
             }
